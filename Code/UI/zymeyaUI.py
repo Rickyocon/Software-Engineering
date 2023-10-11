@@ -28,9 +28,9 @@ def display_quarantine():
 def display_home():
     for widget in main_frame.winfo_children():
         widget.destroy()
-    logo = tk.PhotoImage(file='zmeya.gif')  # Replace with the path to your logo
+    logo = tk.PhotoImage(file='Code/UI/zmeya.gif')
     logo_label = tk.Label(main_frame, image=logo, bg='#202A44')
-    logo_label.image = logo  # Keep a reference to prevent garbage collection
+    logo_label.image = logo # Keep a reference to prevent garbage collection
     welcome_label = tk.Label(main_frame, text="Welcome to Zmeya", bg='#202A44', fg='white', font='Helvetica 16 bold')
     logo_label.pack(pady=(60, 20))
     welcome_label.pack(pady=20)
@@ -74,7 +74,7 @@ main_frame = tk.Frame(root, bg='#202A44')
 main_frame.pack(side='right', expand=True, fill='both')
 
 # Logo and welcome message labels
-logo = tk.PhotoImage(file='zmeya.gif')  # Replace with the path to your logo
+logo = tk.PhotoImage(file='Code/UI/zmeya.gif')
 logo_label = tk.Label(main_frame, image=logo, bg='#202A44')
 welcome_label = tk.Label(main_frame, text="Welcome to Zmeya", bg='#202A44', fg='white', font='Helvetica 16 bold')
 
