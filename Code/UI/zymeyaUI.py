@@ -65,7 +65,7 @@ def switch_to_home_page():
 
 # Function to display the content on the Home page
 def display_home_content():
-    logo = tk.PhotoImage(file='zmeya.gif')
+    logo = tk.PhotoImage(file='Code/UI/assets/Zmeya.png')
     logo_label = tk.Label(main_frame, image=logo, bg='#202A44')
     welcome_label = tk.Label(main_frame, text="Welcome to Zmeya", bg='#202A44', fg='white', font='Helvetica 16 bold')
 
