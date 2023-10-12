@@ -1,79 +1,106 @@
+# Import the tkinter library
 import tkinter as tk
-from tkinter import ttk
-    # Themed Tk (Ttk) is a newer family of Tk widgets that provide a much 
-    # better appearance on different platforms than many of the classic Tk widgets. 
-from PIL import Image, ImageTk  # Pillow library to edit the image
 
-# Functions to open different windows
+# Function to display the Settings page
+def display_settings():
+    update_main_frame("Settings will be displayed here")
 
-def open_manual_scan():
-    manual_scan_window = tk.Toplevel(startup)
-    manual_scan_window.title("Manual Scan")
-    ttk.Label(manual_scan_window, text="Manual Scan page").pack(padx=20, pady=20)
+# Function to display the Scanning options page
+def display_scanning():
+    switch_to_scan_page()
 
-def open_scan_scheduler():
-    scan_scheduler_window = tk.Toplevel(startup)
-    scan_scheduler_window.title("Schedule Scan ")
-    ttk.Label(scan_scheduler_window, text="Schedule Scan page").pack(padx=20, pady=20)
+# Function to display the Options page
+def display_options():
+    update_main_frame("Options will be configured here")
 
-def open_settings():
-    settings_window = tk.Toplevel(startup)
-    settings_window.title("Settings")
-    ttk.Label(settings_window, text="Settings page.").pack(padx=20, pady=20)
+# Function to display the Quarantine page
+def display_quarantine():
+    update_main_frame("Quarantine will be managed here")
 
-# Create the startup screen
-startup = tk.Tk()  # Startup(root) window
-startup.configure(bg='#FEF3E0') # Set the background color
-startup.title("Zmeya") # The title of the Startup window 
-start_label = tk.Label(startup, text="Hello, welcome to Zmeya!", bg="#FEF3E0", fg="#D35400", font=("Arial", 25))
-start_label.grid(row=0, column=1, pady=20)
-startup.geometry("800x600")  # Width x Height
+# Function to display the Home page
+def display_home():
+    switch_to_home_page()
 
-# Place the Zmeya logo
+# Function to switch to the Scanning page
+def switch_to_scan_page():
+    clear_main_frame()
+    scan_page_title = tk.Label(main_frame, text="Scan Options", bg='#202A44', fg='white', font='Helvetica 16 bold')
+    scan_page_title.pack(pady=20)
+    
+    btn_quick_scan = tk.Button(main_frame, text="Quick Scan", command=display_quick_scan_options, bg='light blue', width=15, relief='solid', bd=1, highlightbackground='light blue', highlightthickness=10, font='Helvetica 12 bold')
+    btn_schedule_scan = tk.Button(main_frame, text="Schedule Scan", command=display_schedule_scan_options, bg='light blue', width=15, relief='solid', bd=1, highlightbackground='light blue', highlightthickness=10, font='Helvetica 12 bold')
+    btn_custom_scan = tk.Button(main_frame, text="Custom Drive Scan", command=display_custom_scan_options, bg='light blue', width=15, relief='solid', bd=1, highlightbackground='light blue', highlightthickness=10, font='Helvetica 12 bold')
+    
+    btn_quick_scan.pack(pady=10, padx=10)
+    btn_schedule_scan.pack(pady=10, padx=10)
+    btn_custom_scan.pack(pady=10, padx=10)
 
-def zmeya_img_bg(img_path, new_bg):
-    # Change the background of the image
-    img = Image.open(img_path)
-    img = img.convert("RGBA") # Convert the image to  the "RGBA" mode
-    new_img = Image.new("RGBA", img.size, new_bg + (255,))
-    new_img.paste(img, (0, 0), img)
-    return new_img
+# Function to display the Quick Scan options
+def display_quick_scan_options():
+    update_main_frame("Quick Scan options will be displayed here")
 
-def border_remove(img_path, new_bg, border_size):
-    # Remove the border of the image if needed
-    img = zmeya_img_bg(img_path, new_bg)
-    width, height = img.size
-    left = border_size
-    right = width - border_size
-    top = border_size
-    bottom = height - border_size
-    new_img = img.crop((left, top, right, bottom))
-    return new_img
+# Function to display the Schedule Scan options
+def display_schedule_scan_options():
+    update_main_frame("Schedule Scan options will be displayed here")
 
-# Final image after changing the background and size.
-bg_color = (254, 243, 224)
-img = border_remove("Zmeya.png", bg_color, 10)   
-zmeya_img = ImageTk.PhotoImage(img)  
+# Function to display the Custom Drive Scan options
+def display_custom_scan_options():
+    update_main_frame("Custom Drive Scan options will be displayed here")
 
-# Upload the image directly if nothing need to be modified
-# zmeya_img = tk.PhotoImage(file="images/zmeya.gif")
+# Function to update the main frame's content
+def update_main_frame(content):
+    clear_main_frame()
+    if content:
+        tk.Label(main_frame, text=content, bg='#202A44', fg='white', font='Helvetica 12 bold').pack(pady=20)
 
-zmeya_label = tk.Label(startup, image=zmeya_img, bg='#FEF3E0', padx=0, pady=0) # Display the zmeya image
-zmeya_label.image = zmeya_img # Keep a reference
-zmeya_label.grid(row=1, column=1)
+# Function to clear the main frame
+def clear_main_frame():
+    for widget in main_frame.winfo_children():
+        widget.destroy()
 
-# Buttons for Manual Scan, Schedule Scan and Settings
-button_style = ttk.Style()
-# print(button_style.theme_use())
-button_style.configure("Custom.TButton", foreground="#D35400", font=("Arial", 15))
-manual_scan_btn = ttk.Button(startup, text="Manual Scan", style="Custom.TButton", command=open_manual_scan, width=20)
-scan_scheduler_btn = ttk.Button(startup, text="Schedule Scan",style="Custom.TButton", command=open_scan_scheduler, width=20)
-settings_btn = ttk.Button(startup, text="Settings", style="Custom.TButton", command=open_settings, width=20)
+# Function to switch to the Home page
+def switch_to_home_page():
+    clear_main_frame()
+    display_home_content()
 
-# Position the buttons
-manual_scan_btn.grid(row=2, column=0, padx=10, pady=10)
-scan_scheduler_btn.grid(row=2, column=1, padx=10, pady=10)
-settings_btn.grid(row=2, column=2, padx=10, pady=10)
+# Function to display the content on the Home page
+def display_home_content():
+    logo = tk.PhotoImage(file='zmeya.gif')
+    logo_label = tk.Label(main_frame, image=logo, bg='#202A44')
+    welcome_label = tk.Label(main_frame, text="Welcome to Zmeya", bg='#202A44', fg='white', font='Helvetica 16 bold')
 
-# Start the main loop
-startup.mainloop()
+    logo_label.image = logo  # Keep a reference to prevent garbage collection
+    logo_label.pack(pady=(60, 20))
+    welcome_label.pack(pady=20)
+
+# Create the main tkinter window
+root = tk.Tk()
+root.title("Zmeya Anti-Malware")
+root.configure(bg='#202A44')
+
+# Create the side frame for navigation buttons
+side_frame = tk.Frame(root, bg='#293B5A')
+side_frame.pack(side='left', fill='y', padx=(0, 20))
+
+# Create navigation buttons to switch between pages
+btn_settings = tk.Button(side_frame, text="Settings", command=display_settings, bg='light blue', width=15, relief='solid', bd=1, highlightbackground='light blue', highlightthickness=10, font='Helvetica 12 bold')
+btn_scanning = tk.Button(side_frame, text="Scanning", command=display_scanning, bg='light blue', width=15, relief='solid', bd=1, highlightbackground='light blue', highlightthickness=10, font='Helvetica 12 bold')
+btn_options = tk.Button(side_frame, text="Options", command=display_options, bg='light blue', width=15, relief='solid', bd=1, highlightbackground='light blue', highlightthickness=10, font='Helvetica 12 bold')
+btn_quarantine = tk.Button(side_frame, text="Quarantine", command=display_quarantine, bg='light blue', width=15, relief='solid', bd=1, highlightbackground='light blue', highlightthickness=10, font='Helvetica 12 bold')
+btn_home = tk.Button(side_frame, text="Home", command=display_home, bg='light blue', width=15, relief='solid', bd=1, highlightbackground='light blue', highlightthickness=10, font='Helvetica 12 bold')
+
+btn_settings.pack(pady=10, padx=10)
+btn_scanning.pack(pady=10, padx=10)
+btn_options.pack(pady=10, padx=10)
+btn_quarantine.pack(pady=10, padx=10)
+btn_home.pack(side='bottom', pady=(0, 10), padx=10)
+
+# Create the main content frame
+main_frame = tk.Frame(root, bg='#202A44')
+main_frame.pack(side='right', expand=True, fill='both')
+
+# Display the Home content at startup
+display_home_content()
+
+# Starting the main application loop
+root.mainloop()
