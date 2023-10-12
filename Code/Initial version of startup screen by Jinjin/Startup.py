@@ -27,7 +27,7 @@ startup.configure(bg='#FEF3E0') # Set the background color
 startup.title("Zmeya") # The title of the Startup window 
 start_label = tk.Label(startup, text="Hello, welcome to Zmeya!", bg="#FEF3E0", fg="#D35400", font=("Arial", 25))
 start_label.grid(row=0, column=1, pady=20)
-startup.geometry("900x600")  # Width x Height
+startup.geometry("800x600")  # Width x Height
 
 # Place the Zmeya logo
 
@@ -52,7 +52,7 @@ def border_remove(img_path, new_bg, border_size):
 
 # Final image after changing the background and size.
 bg_color = (254, 243, 224)
-img = border_remove("zmeya.gif", bg_color, 10)   
+img = border_remove("Zmeya.png", bg_color, 10)   
 zmeya_img = ImageTk.PhotoImage(img)  
 
 # Upload the image directly if nothing need to be modified
