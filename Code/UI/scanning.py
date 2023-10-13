@@ -18,7 +18,7 @@ def switch_to_scan_page(main_frame, update_main_frame, clear_main_frame):
     btn_custom_scan.pack(pady=style.PAD_Y, padx=style.PAD_X)
 
 def display_full_scan_options(update_main_frame):
-    update_main_frame("Quick Scan options will be displayed here")
+    update_main_frame("Full Scan options will be displayed here")
 
 def display_schedule_scan_options(update_main_frame):
     update_main_frame("Schedule Scan options will be displayed here")
