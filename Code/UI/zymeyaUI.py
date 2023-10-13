@@ -9,10 +9,6 @@ def display_settings():
 def display_scanning():
     switch_to_scan_page()
 
-# Function to display the Options page
-def display_options():
-    update_main_frame("Options will be configured here")
-
 # Function to display the Quarantine page
 def display_quarantine():
     update_main_frame("Quarantine will be managed here")
@@ -85,13 +81,11 @@ side_frame.pack(side='left', fill='y', padx=(0, 20))
 # Create navigation buttons to switch between pages
 btn_settings = tk.Button(side_frame, text="Settings", command=display_settings, bg='light blue', width=15, relief='solid', bd=1, highlightbackground='light blue', highlightthickness=10, font='Helvetica 12 bold')
 btn_scanning = tk.Button(side_frame, text="Scanning", command=display_scanning, bg='light blue', width=15, relief='solid', bd=1, highlightbackground='light blue', highlightthickness=10, font='Helvetica 12 bold')
-btn_options = tk.Button(side_frame, text="Options", command=display_options, bg='light blue', width=15, relief='solid', bd=1, highlightbackground='light blue', highlightthickness=10, font='Helvetica 12 bold')
 btn_quarantine = tk.Button(side_frame, text="Quarantine", command=display_quarantine, bg='light blue', width=15, relief='solid', bd=1, highlightbackground='light blue', highlightthickness=10, font='Helvetica 12 bold')
 btn_home = tk.Button(side_frame, text="Home", command=display_home, bg='light blue', width=15, relief='solid', bd=1, highlightbackground='light blue', highlightthickness=10, font='Helvetica 12 bold')
 
 btn_settings.pack(pady=10, padx=10)
 btn_scanning.pack(pady=10, padx=10)
-btn_options.pack(pady=10, padx=10)
 btn_quarantine.pack(pady=10, padx=10)
 btn_home.pack(side='bottom', pady=(0, 10), padx=10)
 
