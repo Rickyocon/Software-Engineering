@@ -2,6 +2,7 @@ import subprocess
 import datetime
 import shutil
 import pathlib
+
 def manualScan(sPath, lPath, qPath):
 
     #Usage:
