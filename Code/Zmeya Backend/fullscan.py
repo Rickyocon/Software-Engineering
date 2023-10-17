@@ -60,4 +60,8 @@ def fullScan(lPath, qPath):
         """
         manualScan(drive, lPath, qPath)
 
+#Example of lPath
+path_to_desktop = os.path.join(os.path.expanduser("~"), "Desktop")
+print(path_to_desktop)
+fullScan(path_to_desktop, None)
 
