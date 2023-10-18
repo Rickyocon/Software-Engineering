@@ -6,6 +6,7 @@ import string
 import os
 
 def manualScan(sPath, lPath, qPath):
+    message = f"Scanned {sPath} and its subdirectories."
 
     #Usage:
     #sPath (String) [First Argument] represents the path to the file that is going to be scanned.
@@ -14,7 +15,6 @@ def manualScan(sPath, lPath, qPath):
 
     #Generate filename based on date
     filename = "Q"+str(datetime.date.today())+".txt"
-
     #If today's log file exists (in the log folder), grab it and append the next scan summary
     #If today's log file does not exist, create one and append the next scan summary
     try:
@@ -23,17 +23,16 @@ def manualScan(sPath, lPath, qPath):
     except:
         print("File not yet created.")
     f = open(filename, "a")
-    subprocess.call(["clamscan.exe",sPath], stdout=f)
 
-    #Garbage Collecting in the text file
-    with open(filename, "r") as f:
-        lines = f.readlines()
-    with open(filename, "w") as f:
-        for line in lines:
-            if "SCAN" in line.strip("\n") or ":" in line.strip("\n"):
-                f.write(line)
+    # Run ClamAV and capture its output
+    process = subprocess.Popen(["clamscan.exe", "-r", sPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    stdout, stderr = process.communicate()
+    summary_message = stdout.split("\n\n")[1]
+    f.write(message + "\n")
+    f.write(summary_message)
     
-    #Move back to the log file
+    #Close and move back to the log file
+    f.close()
     shutil.move(filename, lPath)
 
 def fullScan(lPath, qPath):
@@ -61,8 +60,8 @@ def fullScan(lPath, qPath):
         manualScan(drive, lPath, qPath)
 
 #Example of lPath
-path_to_desktop = os.path.join(os.path.expanduser("~"), "Desktop")
-print(path_to_desktop)
-fullScan(path_to_desktop, None)
+lPath = os.path.join(os.path.expanduser("~"), "Desktop")
+
+fullScan(lPath, None)
 
 
