@@ -22,18 +22,25 @@ def manualScan(sPath, lPath, qPath):
         #shutil.move(src, dst, copy_function=copy2): recursively move a file or directory (src) to another location (dst) and return the destination.
     except:
         print("File not yet created.")
+
     f = open(filename, "a")
 
     # Run ClamAV and capture its output
-    process = subprocess.Popen(["clamscan.exe", "-r", sPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    stdout, stderr = process.communicate()
-    summary_message = stdout.split("\n\n")[1]
-    f.write(message + "\n")
-    f.write(summary_message)
+    subprocess.call(["clamscan.exe","-r", sPath], stdout=f)
+
+    #Garbage Collecting in the text file
+    with open(filename, "r") as f:
+        lines = f.readlines()
+    with open(filename, "w") as f:
+        for line in lines:
+            if "\\" not in line:
+                f.write(line)
+        f.write("\n" + message + "\n")
     
     #Close and move back to the log file
     f.close()
     shutil.move(filename, lPath)
+
 
 def fullScan(lPath, qPath):
     """
