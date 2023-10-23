@@ -22,8 +22,14 @@ def customScan(sPaths, lPath=None, qPath=None):
     marker_found = False
  
     #Generate filename based on date
-    if lPath:
-        filename = "Q"+str(datetime.date.today())+".txt"
+    filename = "Q"+str(datetime.date.today())+".txt"
+
+    if not lPath:
+        log_folder = "C:\\Program Files\\ClamAV\\log"
+        lPath = "C:\\Program Files\\ClamAV\\log"
+        if not os.path.exists(log_folder):
+            os.makedirs(log_folder, exist_ok=True)
+
 
     #If today's log file exists (in the log folder), grab it and append the next scan summary
     #If today's log file does not exist, create one and append the next scan summary
@@ -49,6 +55,7 @@ def customScan(sPaths, lPath=None, qPath=None):
             f.write(message)
         f.write("\n\n")    
 
+    
     #Close and move back to the log file
     f.close()
     shutil.move(filename, lPath)
@@ -57,6 +64,6 @@ def customScan(sPaths, lPath=None, qPath=None):
 #Test case
 sPaths = ["C:\\Users\\kitty\\Desktop", "Z:\\"]
 lPath = os.path.join(os.path.expanduser("~"), "Desktop")
-customScan(sPaths,lPath, None)
+customScan(sPaths,None, None)
 
 
