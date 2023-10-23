@@ -6,17 +6,24 @@ import string
 import os
 
 def customScan(sPaths, lPath, qPath):
-    log_message = []
-    for sPath in sPaths:
-        message = "\n"+"Scanned " + sPath + " and its subdirectories." 
-        log_message.append(message)
     #Usage:
     #sPath (String) [First Argument] represents the path to the file that is going to be scanned.
     #lPath (String) [Second Argument] represents the path to the file where the logs are to be deposited.
     #qPath (String) [Third Argument] represents the path to the file where the virus/infected folder is to be deposited.
 
+    #Message of scanning directories
+    log_message = []
+    for sPath in sPaths:
+        message = "\n"+"Scanned " + sPath + " and its subdirectories." 
+        log_message.append(message)
+
+    #Set the marker of stdout
+    marker = "----------- SCAN SUMMARY -----------"
+    marker_found = False
+ 
     #Generate filename based on date
     filename = "Q"+str(datetime.date.today())+".txt"
+
     #If today's log file exists (in the log folder), grab it and append the next scan summary
     #If today's log file does not exist, create one and append the next scan summary
     try:
@@ -25,30 +32,26 @@ def customScan(sPaths, lPath, qPath):
     except:
         print("File not yet created.")
 
-    f = open(filename, "a")
-
     #Commond for ClamAV
     scan_command = ["clamscan.exe", "-r", "--max-dir-recursion=10"]
-
-    #Set paths need to be scanned
     scan_command.extend(sPaths)
-    
-    #Run ClamAV    
-    subprocess.call(scan_command, stdout=f)
+    print(" ".join(scan_command))
 
-    #Garbage Collecting in the text file
-    with open(filename, "r") as f:
-        lines = f.readlines()
-    with open(filename, "w") as f:
-        for line in lines:
-            if "\\" not in line:
+    with open(filename, "a") as f:  
+        process = subprocess.Popen(scan_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        for line in process.stdout:
+            if marker in line:
+                marker_found = True
+            if marker_found:
                 f.write(line)
         for message in log_message:    
             f.write(message)
-    
+        f.write("\n\n")    
+
     #Close and move back to the log file
     f.close()
     shutil.move(filename, lPath)
+    print("Scanned" +", ".join(sPaths))
 
 def fullScan(lPath, qPath):
     """
@@ -69,7 +72,7 @@ def fullScan(lPath, qPath):
     customScan(drives, lPath, qPath)
   
 
-#Example 
+#Test case
 lPath = os.path.join(os.path.expanduser("~"), "Desktop")
 fullScan(lPath, None,)
 
