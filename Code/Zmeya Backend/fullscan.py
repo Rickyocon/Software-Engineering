@@ -5,9 +5,11 @@ import pathlib #This module offers classes representing filesystem paths with se
 import string
 import os
 
-def manualScan(sPath, lPath, qPath, excluded_paths = None):
-    message = f"Scanned {sPath} and its subdirectories."
-
+def customScan(sPaths, lPath, qPath):
+    log_message = []
+    for sPath in sPaths:
+        message = "\n"+"Scanned " + sPath + " and its subdirectories." 
+        log_message.append(message)
     #Usage:
     #sPath (String) [First Argument] represents the path to the file that is going to be scanned.
     #lPath (String) [Second Argument] represents the path to the file where the logs are to be deposited.
@@ -26,16 +28,18 @@ def manualScan(sPath, lPath, qPath, excluded_paths = None):
     f = open(filename, "a")
 
     #Commond for ClamAV
-    scan_command = ["clamscan.exe", "-r", sPath]
+    scan_command = ["clamscan.exe", "-r", "--max-dir-recursion=10", "-o"]
 
-    #Avoid to scan excluded_files
-    if excluded_paths:
-        for path in excluded_paths:
-            scan_command.extend(['--exclude', path])
-
-    # Run ClamAV and capture its output
-    subprocess.call(scan_command, stdout=f)
+    #Set paths need to be scanned
+    scan_command.extend(sPaths)
     
+    #Run ClamAV    
+    subprocess.call(scan_command, stdout=f)
+
+    with open(filename, "a") as f:
+        for string in log_message:
+            f.write(string )
+    '''
     #Garbage Collecting in the text file
     with open(filename, "r") as f:
         lines = f.readlines()
@@ -43,13 +47,15 @@ def manualScan(sPath, lPath, qPath, excluded_paths = None):
         for line in lines:
             if "\\" not in line:
                 f.write(line)
-        f.write("\n" + message + "\n")
-    
+        for message in log_message:    
+            f.write(message)
+    '''
     #Close and move back to the log file
     f.close()
     shutil.move(filename, lPath)
+    print("Scan finished!")
 
-def fullScan(lPath, qPath, excluded_paths = None):
+def fullScan(lPath, qPath):
     """
     Conduct a full system scan on Windows 10.
     Usage:
@@ -71,11 +77,11 @@ def fullScan(lPath, qPath, excluded_paths = None):
         and these expressions will be evaluated at runtime and then formatted into the 
         resulting string.
         """
-        manualScan(drive, lPath, qPath, excluded_paths)
-    print("Scan Finish!")
+        customScan(drive, lPath, qPath)
+  
+
 #Example 
 lPath = os.path.join(os.path.expanduser("~"), "Desktop")
-excluded_paths = ["C:\\Users\\*", "C:\\Windows\\*", "C:\\Program Files\\*", "C:\\Program Files (x86)\\*"]
-fullScan(lPath, None, excluded_paths)
+fullScan(lPath, None,)
 
 
