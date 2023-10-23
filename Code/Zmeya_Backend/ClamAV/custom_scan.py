@@ -3,7 +3,7 @@ import datetime
 import shutil
 import pathlib
 
-def manualScan(sPath, lPath, qPath):
+def CustomScan(sPath, lPath, qPath):
 
     #Usage:
     #sPath (String) [First Argument] represents the path to the file that is going to be scanned.
