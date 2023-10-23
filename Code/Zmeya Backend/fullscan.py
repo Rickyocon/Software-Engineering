@@ -28,7 +28,7 @@ def customScan(sPaths, lPath, qPath):
     f = open(filename, "a")
 
     #Commond for ClamAV
-    scan_command = ["clamscan.exe", "-r", "--max-dir-recursion=10", "-o"]
+    scan_command = ["clamscan.exe", "-r", "--max-dir-recursion=10"]
 
     #Set paths need to be scanned
     scan_command.extend(sPaths)
@@ -36,10 +36,6 @@ def customScan(sPaths, lPath, qPath):
     #Run ClamAV    
     subprocess.call(scan_command, stdout=f)
 
-    with open(filename, "a") as f:
-        for string in log_message:
-            f.write(string )
-    '''
     #Garbage Collecting in the text file
     with open(filename, "r") as f:
         lines = f.readlines()
@@ -49,11 +45,10 @@ def customScan(sPaths, lPath, qPath):
                 f.write(line)
         for message in log_message:    
             f.write(message)
-    '''
+    
     #Close and move back to the log file
     f.close()
     shutil.move(filename, lPath)
-    print("Scan finished!")
 
 def fullScan(lPath, qPath):
     """
