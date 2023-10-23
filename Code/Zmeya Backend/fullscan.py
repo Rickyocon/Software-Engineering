@@ -70,14 +70,8 @@ def fullScan(lPath, qPath):
     3. 'os.path.exists('%s:\\' % d)': This checks if a path with the given drive letter exists.
        If the drive exists, its path (like 'C:\\') is added to the list.
     """
-    for drive in drives:
-        print(f"Scanning {drive}...")
-        """
-        f-string. Inside an f-string, you can include expressions inside curly braces {}, 
-        and these expressions will be evaluated at runtime and then formatted into the 
-        resulting string.
-        """
-        customScan(drive, lPath, qPath)
+    
+    customScan(drives, lPath, qPath)
   
 
 #Example 
