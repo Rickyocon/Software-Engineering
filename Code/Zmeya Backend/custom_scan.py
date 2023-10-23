@@ -5,7 +5,7 @@ import pathlib #This module offers classes representing filesystem paths with se
 import string
 import os
 
-def customScan(sPaths, lPath, qPath):
+def customScan(sPaths, lPath=None, qPath=None):
     #Usage:
     #sPath (String) [First Argument] represents the path to the file that is going to be scanned.
     #lPath (String) [Second Argument] represents the path to the file where the logs are to be deposited.
@@ -22,7 +22,8 @@ def customScan(sPaths, lPath, qPath):
     marker_found = False
  
     #Generate filename based on date
-    filename = "Q"+str(datetime.date.today())+".txt"
+    if lPath:
+        filename = "Q"+str(datetime.date.today())+".txt"
 
     #If today's log file exists (in the log folder), grab it and append the next scan summary
     #If today's log file does not exist, create one and append the next scan summary
