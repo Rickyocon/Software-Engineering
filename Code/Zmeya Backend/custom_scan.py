@@ -5,12 +5,11 @@ import pathlib #This module offers classes representing filesystem paths with se
 import string
 import os
 
-def customScan(sPaths, lPath, qPath, excluded_paths=None):
+def customScan(sPaths, lPath, qPath):
     log_message = []
     for sPath in sPaths:
         message = "\n"+"Scanned " + sPath + " and its subdirectories." 
         log_message.append(message)
-
     #Usage:
     #sPath (String) [First Argument] represents the path to the file that is going to be scanned.
     #lPath (String) [Second Argument] represents the path to the file where the logs are to be deposited.
@@ -27,23 +26,16 @@ def customScan(sPaths, lPath, qPath, excluded_paths=None):
         print("File not yet created.")
 
     f = open(filename, "a")
-
+    
     #Commond for ClamAV
-    scan_command = ["clamscan.exe", "-r"]
-
-    #Avoid to scan excluded_files
-    # Avoid to scan excluded_files
-    if excluded_paths:
-        for path in excluded_paths:
-            scan_command.extend(['--exclude', path])
+    scan_command = ["clamscan.exe", "-r", "--max-dir-recursion=10"]
 
     #Set paths need to be scanned
     scan_command.extend(sPaths)
-    #print("Executing command: ", " ".join(scan_command))
     
     #Run ClamAV    
     subprocess.call(scan_command, stdout=f)
-
+  
     #Garbage Collecting in the text file
     with open(filename, "r") as f:
         lines = f.readlines()
@@ -61,9 +53,8 @@ def customScan(sPaths, lPath, qPath, excluded_paths=None):
 
 
 sPaths = ["C:\\Users\\kitty\\Desktop", "Z:\\"]
-excluded_paths = ["C:\\Users\\kitty\\Desktop\\333" ]
 lPath = os.path.join(os.path.expanduser("~"), "Desktop")
 
-customScan(sPaths,lPath, None, excluded_paths)
+customScan(sPaths,lPath, None)
 
 
