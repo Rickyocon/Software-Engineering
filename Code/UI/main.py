@@ -1,4 +1,7 @@
 import tkinter as tk
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import scanning
 import settings
 import quarantine
