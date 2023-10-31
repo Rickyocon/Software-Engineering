@@ -13,8 +13,9 @@ def switch_to_scan_page(main_frame, update_main_frame, clear_main_frame):
 
     btn_full_scan = tk.Button(main_frame, text="Full Scan", command=lambda: display_full_scan_options(update_main_frame), **style.BUTTON_STYLES)
     btn_schedule_scan = tk.Button(main_frame, text="Schedule Scan", command=lambda: display_schedule_scan_options(update_main_frame), **style.BUTTON_STYLES)
-    btn_custom_scan = tk.Button(main_frame, text="Custom Drive Scan", command=lambda: display_custom_scan_options(update_main_frame), **style.BUTTON_STYLES)
-    
+    btn_custom_scan = tk.Button(main_frame, text="Custom Drive Scan", command=lambda: display_custom_scan_options(main_frame, update_main_frame, clear_main_frame), **style.BUTTON_STYLES)
+
+   
     btn_full_scan.pack(pady=style.PAD_Y, padx=style.PAD_X)
     btn_schedule_scan.pack(pady=style.PAD_Y, padx=style.PAD_X)
     btn_custom_scan.pack(pady=style.PAD_Y, padx=style.PAD_X)
@@ -45,6 +46,8 @@ def display_custom_scan_options(main_frame, update_main_frame, clear_main_frame)
     lbl_log_path.pack(pady=style.PAD_Y)
     entry_log_path = tk.Entry(main_frame, **style.ENTRY_STYLES)
     entry_log_path.pack(pady=style.PAD_Y)
+    btn_browse = tk.Button(main_frame, text="Browse", command=lambda: browse_target(entry_scan_target), **style.BUTTON_STYLES)
+    btn_browse.pack(pady=style.PAD_Y)
 
     # Start Scan Button
     btn_start_scan = tk.Button(main_frame, text="Start Scan", command=lambda: start_scan(entry_scan_target.get(), entry_log_path.get()), **style.BUTTON_STYLES)

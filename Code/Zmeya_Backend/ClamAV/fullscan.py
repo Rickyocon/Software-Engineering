@@ -81,7 +81,7 @@ def fullScan(lPath, qPath):
   
 
 #Test case
-lPath = os.path.join(os.path.expanduser("~"), "Desktop")
-fullScan(lPath, None,)
+#lPath = os.path.join(os.path.expanduser("~"), "Desktop")
+#fullScan(lPath, None,)
 
 

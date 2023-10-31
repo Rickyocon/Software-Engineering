@@ -11,6 +11,15 @@ BUTTON_HIGHLIGHT_COLOR = 'light blue'
 FONT_LARGE = 'Helvetica 16 bold'
 FONT_MEDIUM = 'Helvetica 12 bold'
 
+# Entry styles
+ENTRY_STYLES = {
+    'bg': 'white',  # Sets the entry background color
+    'fg': 'black',  # Sets the entry text color
+    'insertbackground': 'black',  # Sets the color of the insertion cursor
+    'font': 'Helvetica 12'  # Sets the font and size of the text
+}
+
+
 # Button styles
 BUTTON_STYLES = {
     'bg': 'light blue',
