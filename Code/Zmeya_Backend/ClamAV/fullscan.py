@@ -22,7 +22,7 @@ def customScan(sPaths, lPath=None, qPath=None):
     marker_found = False
  
     #Generate filename based on date
-    filename = "Q"+str(datetime.date.today())+".txt"
+    filename = "L"+str(datetime.date.today())+".txt"
 
     if not lPath:
         log_folder = "C:\\Program Files\\ClamAV\\log"
