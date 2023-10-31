@@ -41,13 +41,12 @@ def display_custom_scan_options(main_frame, update_main_frame, clear_main_frame)
     btn_browse = tk.Button(main_frame, text="Browse", command=lambda: browse_target(entry_scan_target), **style.BUTTON_STYLES)
     btn_browse.pack(pady=style.PAD_Y)
 
-    # Optional Log File Path
     lbl_log_path = tk.Label(main_frame, text="Optional: Log File Path:", **style.LABEL_STYLES)
     lbl_log_path.pack(pady=style.PAD_Y)
     entry_log_path = tk.Entry(main_frame, **style.ENTRY_STYLES)
     entry_log_path.pack(pady=style.PAD_Y)
-    btn_browse = tk.Button(main_frame, text="Browse", command=lambda: browse_target(entry_scan_target), **style.BUTTON_STYLES)
-    btn_browse.pack(pady=style.PAD_Y)
+    btn_browse_log = tk.Button(main_frame, text="Browse Log", command=lambda: browse_log_path(entry_log_path), **style.BUTTON_STYLES)
+    btn_browse_log.pack(pady=style.PAD_Y)
 
     # Start Scan Button
     btn_start_scan = tk.Button(main_frame, text="Start Scan", command=lambda: start_scan(entry_scan_target.get(), entry_log_path.get()), **style.BUTTON_STYLES)
@@ -57,6 +56,12 @@ def display_custom_scan_options(main_frame, update_main_frame, clear_main_frame)
     def browse_target(entry_widget):
         folder_selected = filedialog.askdirectory()  # For directory
         # file_selected = filedialog.askopenfilename()  # For file selection, if you need
+        entry_widget.delete(0, tk.END)
+        entry_widget.insert(0, folder_selected)
+        
+    # Function to browse for a log file path
+    def browse_log_path(entry_widget):
+        folder_selected = filedialog.askdirectory()  # For directory
         entry_widget.delete(0, tk.END)
         entry_widget.insert(0, folder_selected)
 
