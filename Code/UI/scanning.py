@@ -63,7 +63,10 @@ def display_custom_scan_options(main_frame, update_main_frame, clear_main_frame)
     # Function to start the scan
     def start_scan(scan_target, log_path):
         if not scan_target:
-            update_main_frame("Please select a target to scan.")
+            update_main_frame("Error: Please select a drive or file to scan.")
+            # Back Button
+            btn_back = tk.Button(main_frame, text="Back", command=lambda: display_custom_scan_options(main_frame, update_main_frame, clear_main_frame), **style.BUTTON_STYLES)
+            btn_back.pack(pady=style.PAD_Y, padx=style.PAD_X)
             return
         log_path = log_path if log_path else None  # Use None if no log path is specified
         customScan([scan_target], log_path, None)  # Assuming quarantine path is not used here
