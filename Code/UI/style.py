@@ -1,17 +1,20 @@
 # Define colors, fonts, and other style-related constants here.
 
 # Colors
-BACKGROUND_COLOR = '#202A44'
-SIDE_FRAME_COLOR = '#293B5A'
-BUTTON_BG_COLOR = 'light blue'
-TEXT_COLOR = 'white'
-BUTTON_HIGHLIGHT_COLOR = 'light blue'
+BACKGROUND_COLOR = '#242424' #dark grey
+SIDE_FRAME_COLOR = '#5F1E89' #purple. can do red ( #772819 ), it matches style too
+#BUTTON_BG_COLOR = 'light blue'
+TEXT_COLOR = '#8DC12D'
+TEXT_HIGHLIGHT_COLOR = '#AD3828'  # Red text color for word "Zmeya"
+#BUTTON_HIGHLIGHT_COLOR = 'light blue'
 
 # Fonts
-FONT_LARGE = 'Helvetica 16 bold'
-FONT_MEDIUM = 'Helvetica 12 bold'
+FONT_LARGE = ('DIN Condensed', 16, "bold") #DIN Condensed matching the font style I used fro buttons
+FONT_MEDIUM = ('DIN Condensed', 12, "bold")
 
 # Button styles
+
+"""
 BUTTON_STYLES = {
     'bg': 'light blue',
     'fg': 'black',  # Sets the button text color
@@ -22,6 +25,7 @@ BUTTON_STYLES = {
     'highlightthickness': 10,
     'font': 'Helvetica 12 bold'
 }
+"""
 
 # Label styles
 LABEL_STYLES = {
