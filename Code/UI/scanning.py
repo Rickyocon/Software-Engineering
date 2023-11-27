@@ -12,7 +12,7 @@ def switch_to_scan_page(main_frame, update_main_frame, clear_main_frame):
     scan_page_title.pack(pady=20)
 
     btn_full_scan = tk.Button(main_frame, text="Full Scan", command=lambda: display_full_scan_options(update_main_frame), **style.BUTTON_STYLES)
-    btn_schedule_scan = tk.Button(main_frame, text="Schedule Scan", command=lambda: display_schedule_scan_options(update_main_frame), **style.BUTTON_STYLES)
+    btn_schedule_scan = tk.Button(main_frame, text="Schedule Scan", command=lambda: display_schedule_scan_options(main_frame, update_main_frame, clear_main_frame), **style.BUTTON_STYLES)
     btn_custom_scan = tk.Button(main_frame, text="Custom Drive Scan", command=lambda: display_custom_scan_options(main_frame, update_main_frame, clear_main_frame), **style.BUTTON_STYLES)
 
    
@@ -23,8 +23,42 @@ def switch_to_scan_page(main_frame, update_main_frame, clear_main_frame):
 def display_full_scan_options(update_main_frame):
     update_main_frame("Full Scan options will be displayed here")
 
-def display_schedule_scan_options(update_main_frame):
-    update_main_frame("Schedule Scan options will be displayed here")
+def display_schedule_scan_options(main_frame, update_main_frame, clear_main_frame):
+    clear_main_frame()
+
+    # Title Label
+    title_label = tk.Label(main_frame, text="Schedule Scan", **style.LABEL_STYLES)
+    title_label.pack(pady=style.PAD_Y)
+
+    # Input for days
+    lbl_days = tk.Label(main_frame, text="Enter days (e.g., Mon,Tue,Wed):", **style.LABEL_STYLES)
+    lbl_days.pack(pady=style.PAD_Y)
+    entry_days = tk.Entry(main_frame, **style.ENTRY_STYLES)
+    entry_days.pack(pady=style.PAD_Y)
+
+    # Input for frequency
+    lbl_frequency = tk.Label(main_frame, text="Enter frequency (in days):", **style.LABEL_STYLES)
+    lbl_frequency.pack(pady=style.PAD_Y)
+    entry_frequency = tk.Entry(main_frame, **style.ENTRY_STYLES)
+    entry_frequency.pack(pady=style.PAD_Y)
+
+    # Input for time
+    lbl_time = tk.Label(main_frame, text="Enter time (HH:MM):", **style.LABEL_STYLES)
+    lbl_time.pack(pady=style.PAD_Y)
+    entry_time = tk.Entry(main_frame, **style.ENTRY_STYLES)
+    entry_time.pack(pady=style.PAD_Y)
+
+    # Path Selections (scan path, log path, quarantine path)
+    # Similar to what you have in the custom scan UI
+
+    # Schedule Button
+    btn_schedule = tk.Button(main_frame, text="Schedule Scan", command=lambda: schedule_scan(entry_days.get(), entry_frequency.get(), entry_time.get()), **style.BUTTON_STYLES)
+    btn_schedule.pack(pady=style.PAD_Y)
+
+    # Function to handle the scheduling
+    def schedule_scan(days, frequency, time):
+        # You'll need to implement the logic to handle the scheduling based on the inputs
+        pass
  
 def display_custom_scan_options(main_frame, update_main_frame, clear_main_frame):
     clear_main_frame()
