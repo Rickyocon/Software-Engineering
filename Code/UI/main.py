@@ -26,7 +26,7 @@ root.configure(bg=style.BACKGROUND_COLOR)
 side_frame = tk.Frame(root, bg=style.SIDE_FRAME_COLOR)
 side_frame.pack(side='left', fill='y', padx=style.PAD_X)
 
-btn_settings = tk.Button(side_frame, text="Settings", command=lambda: settings.display_settings(update_main_frame), **style.BUTTON_STYLES)
+btn_settings = tk.Button(side_frame, text="Settings", command=lambda: settings.display_settings(main_frame, update_main_frame, clear_main_frame), **style.BUTTON_STYLES)
 btn_scanning = tk.Button(side_frame, text="Scanning", command=lambda: scanning.display_scanning(main_frame, update_main_frame, clear_main_frame), **style.BUTTON_STYLES)
 btn_quarantine = tk.Button(side_frame, text="Quarantine", command=lambda: quarantine.display_quarantine(update_main_frame), **style.BUTTON_STYLES)
 btn_home = tk.Button(side_frame, text="Home", command=lambda: home.display_home_content(main_frame), **style.BUTTON_STYLES)
