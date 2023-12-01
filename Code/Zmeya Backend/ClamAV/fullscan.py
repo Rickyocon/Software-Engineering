@@ -104,10 +104,5 @@ def fullScan(lPath, qPath):
     customScan(drives, lPath, qPath)
   
 
-sPaths = ["C:/Users/kitty/Desktop"]
-lPath = "Z:/test"
-qPath = "Z:/test"
-customScan(sPaths, None, None)
-customScan(sPaths, lPath, qPath)
 
 
