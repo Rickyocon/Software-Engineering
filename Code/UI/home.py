@@ -11,9 +11,7 @@ def display_home_content(main_frame):
 
     # Information section
     info_frame = tk.Frame(main_frame, bg=style.BACKGROUND_COLOR)  # Create a frame to hold info labels
-    last_scan_label = tk.Label(info_frame, text="Last Scan: [Date]", **style.LABEL_STYLES)  # Replace [Date] with the actual date data
-    recommended_scan_lable = tk.Label(info_frame, text="Recommended Scan: [Yes/No]", **style.LABEL_STYLES) # replace yes/no with reommened scan based on time since last scan, ie if lest say two weeks passed since last scan recomend scan=yes
-
+    
     # Packing UI elements
     logo_label.image = logo  # Keep a reference to prevent garbage collection
     logo_label.pack(pady=(60, 20))
@@ -21,7 +19,5 @@ def display_home_content(main_frame):
     
     # Packing information section
     info_frame.pack(pady=20, fill='x')
-    last_scan_label.pack(pady=(0, 10))
-    recommended_scan_lable.pack(pady=(0, 10))
 
     

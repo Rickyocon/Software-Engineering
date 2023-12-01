@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 import style
 from Zmeya_Backend.ClamAV.fullscan import customScan
+from Zmeya_Backend.ClamAV.fullscan import fullScan
 
 def display_scanning(main_frame, update_main_frame, clear_main_frame):
     switch_to_scan_page(main_frame, update_main_frame, clear_main_frame)
@@ -11,7 +12,7 @@ def switch_to_scan_page(main_frame, update_main_frame, clear_main_frame):
     scan_page_title = tk.Label(main_frame, text="Scan Options", **style.LABEL_STYLES)
     scan_page_title.pack(pady=20)
 
-    btn_full_scan = tk.Button(main_frame, text="Full Scan", command=lambda: display_full_scan_options(update_main_frame), **style.BUTTON_STYLES)
+    btn_full_scan = tk.Button(main_frame, text="Full system scan", command=lambda: display_full_scan_options(main_frame, update_main_frame, clear_main_frame), **style.BUTTON_STYLES)
     btn_schedule_scan = tk.Button(main_frame, text="Schedule Scan", command=lambda: display_schedule_scan_options(main_frame, update_main_frame, clear_main_frame), **style.BUTTON_STYLES)
     btn_custom_scan = tk.Button(main_frame, text="Custom Drive Scan", command=lambda: display_custom_scan_options(main_frame, update_main_frame, clear_main_frame), **style.BUTTON_STYLES)
 
@@ -19,9 +20,43 @@ def switch_to_scan_page(main_frame, update_main_frame, clear_main_frame):
     btn_full_scan.pack(pady=style.PAD_Y, padx=style.PAD_X)
     btn_schedule_scan.pack(pady=style.PAD_Y, padx=style.PAD_X)
     btn_custom_scan.pack(pady=style.PAD_Y, padx=style.PAD_X)
+    
+    
+def display_full_scan_options(main_frame, update_main_frame, clear_main_frame):
+    # Clear the main frame
+    clear_main_frame()
 
-def display_full_scan_options(update_main_frame):
-    update_main_frame("Full Scan options will be displayed here")
+    # Title Label for Full Scan Page
+    full_scan_title = tk.Label(main_frame, text="Full System Scan", font=("Helvetica", 16), bg="#202A44", fg="white")
+    full_scan_title.pack(pady=20)
+
+    # Scan Status Label
+    scan_status_label = tk.Label(main_frame, text="", font=("Helvetica", 12), bg="#202A44", fg="white")
+    scan_status_label.pack(pady=20)
+
+    # Start Scan Button Function
+    def start_full_scan():
+        # Placeholder paths for log and quarantine. Modify as needed.
+        log_path = "path_to_log_directory"
+        quarantine_path = "path_to_quarantine_directory"
+
+        # Update UI with scan status
+        scan_status_label.config(text="Scanning... Please wait.")
+        main_frame.update()
+
+        # Start full scan
+        fullScan(log_path, quarantine_path)
+
+        # Update UI post scan
+        scan_status_label.config(text="Scan Complete. Check logs for details.")
+
+    # Start Scan Button
+    start_scan_btn = tk.Button(main_frame, text="Start Full Scan", command=start_full_scan, bg="light blue", font=("Helvetica", 12))
+    start_scan_btn.pack(pady=10)
+
+# This function can be called from the relevant part of your main UI.
+# Example: When the user clicks the 'Full Scan' button on the scanning page, call `display_full_scan_options`.
+
 
 def display_schedule_scan_options(main_frame, update_main_frame, clear_main_frame):
     clear_main_frame()
