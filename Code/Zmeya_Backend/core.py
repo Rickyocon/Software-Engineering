@@ -133,13 +133,6 @@ def schedule_scan_once(year, month, day, input_hour, input_minute):
 
 
 """
-# Example of use:
-# customScan(["C:/Users/kitty/Desktop"], None, None)
-# fullScan("Z:/test", "Z:/test")
-# schedule_scan_daily(15, 30, 2)
-# schedule_scan_weekly("MON", 15, 30, 1)
-# schedule_scan_monthly(15, 15, 30, 1)
-# schedule_scan_once(2023, 12, 25, 15, 30)
 """
 
 
@@ -149,4 +142,7 @@ lPath = "Z:/test"
 qPath = "Z:/test"
 customScan(sPaths, None, None)
 customScan(sPaths, lPath, q)
-
+schedule_scan_daily(15, 30, 2)
+schedule_scan_weekly("MON", 15, 30, 1)
+schedule_scan_monthly(15, 15, 30, 1)
+schedule_scan_once(2023, 12, 25, 15, 30)
