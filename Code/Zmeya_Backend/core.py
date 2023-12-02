@@ -29,44 +29,60 @@ def new_folder(path):
     return fPath
 
 def customScan(sPaths, lPath=None, qPath=None):
-    # ... existing setup ...
 
-    # Command for ClamAV
-    scan_command = ["clamscan.exe", "-r", "--max-dir-recursion=10", f"--move={qPath}", "-i"]
+    #Usage:
+    #sPaths (String list) [First Argument] represents the path to the file that is going to be scanned.
+    #lPath (String) [Second Argument] represents the path to the file where the logs are to be deposited.
+    #ePaths (String list) [Third Argument] represents the path to the directories that is going to be excluded.
+    #qPath (String) [Fourth Argument] represents the path to the file where the virus/infected folder is to be deposited.
+
+    #replace "/" in the sPaths, lPath, ePaths to "\\"
+    sPaths = path_format(sPaths)
+   
+    if lPath:
+        lPath = path_format(lPath)
+    else:
+        lfolder = "Zmeya_log"
+        lPath = customPath(lfolder)
+
+    if qPath:
+        qPath = path_format(qPath)
+    else:
+        qfolder = "Zmeya_quarantine"
+        qPath = customPath(qfolder)
+    qPath = new_folder(qPath)
+
+    print("Zmeya is scanning: ", sPaths)
+    print("The log path is: ", lPath)
+    print("The quaranting path is: ", qPath)
+
+    #Commond for ClamAV
+    scan_command = ["clamscan.exe", "-r", "--max-dir-recursion=10",f"--move={qPath}", "-i"]
     scan_command.extend(sPaths)
     print(" ".join(scan_command))
-
-    # Log message preparation
+    
+    #Message of scanning directories
     log_message = []
     for sPath in sPaths:
-        message = "\n" + "Scanned " + sPath + " and its subdirectories."
+        message = "\n"+"Scanned " + sPath + " and its subdirectories." 
         log_message.append(message)
 
-    # Generate log file based on date
-    log_file = "L" + str(datetime.date.today()) + ".txt"
-    log_file_path = os.path.join(lPath, log_file)
-
+    #Generate log file based on date
+    log_file = "L"+str(datetime.date.today())+".txt"
+    
     try:
-        with open(log_file_path, "a") as f:
+        with open(lPath + "\\" + log_file, "a") as f:
             process = subprocess.Popen(scan_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
-            # Write initial log messages and yield outputs
-            for message in log_message:
+            for message in log_message:    
                 f.write(message)
-                yield message
-
             f.write("\n\n")
-            for line in iter(process.stdout.readline, ''):
+            for line in process.stdout:
                 f.write(line)
-                yield line.strip()
-
             f.close()
     except FileNotFoundError:
         print("File not yet created.")
-        yield "Error: Log file not found."
-
+  
     print("Scanned ", sPaths)
-    yield "Scan completed."
 
       
 def fullScan(lPath, qPath):
@@ -86,12 +102,51 @@ def fullScan(lPath, qPath):
     """
     
     customScan(drives, lPath, qPath)
-  
+######
+def run_schtasks(command):
+    try:
+        subprocess.run(command, check=True, shell=True)
+        print("Scheduled task created successfully.")
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred: {e}")
+
+def schedule_scan_daily(input_hour, input_minute, input_often=1):
+    path = os.path.abspath(__file__)
+    command = f"SCHTASKS /CREATE /SC DAILY /MO {input_often} /TN \"YourScanTaskNameDaily\" /TR \"python {path} {input_hour} {input_minute}\" /ST {input_hour:02d}:{input_minute:02d} /F"
+    run_schtasks(command)
+
+def schedule_scan_weekly(weekday, input_hour, input_minute, input_often=1):
+    path = os.path.abspath(__file__)
+    command = f"SCHTASKS /CREATE /SC WEEKLY /D {weekday} /MO {input_often} /TN \"YourScanTaskNameWeekly\" /TR \"python {path} {input_hour} {input_minute}\" /ST {input_hour:02d}:{input_minute:02d} /F"
+    run_schtasks(command)
+
+def schedule_scan_monthly(day_of_month, input_hour, input_minute, input_often=1):
+    path = os.path.abspath(__file__)
+    command = f"SCHTASKS /CREATE /SC MONTHLY /D {day_of_month} /MO {input_often} /TN \"YourScanTaskNameMonthly\" /TR \"python {path} {input_hour} {input_minute}\" /ST {input_hour:02d}:{input_minute:02d} /F"
+    run_schtasks(command)
+
+def schedule_scan_once(year, month, day, input_hour, input_minute):
+    path = os.path.abspath(__file__)
+    date = f"{year}-{month:02d}-{day:02d}"
+    command = f"SCHTASKS /CREATE /SC ONCE /SD {date} /TN \"YourScanTaskNameOnce\" /TR \"python {path} {input_hour} {input_minute}\" /ST {input_hour:02d}:{input_minute:02d} /F"
+    run_schtasks(command)
+
+
+"""
+# Example of use:
+# customScan(["C:/Users/kitty/Desktop"], None, None)
+# fullScan("Z:/test", "Z:/test")
+# schedule_scan_daily(15, 30, 2)
+# schedule_scan_weekly("MON", 15, 30, 1)
+# schedule_scan_monthly(15, 15, 30, 1)
+# schedule_scan_once(2023, 12, 25, 15, 30)
+"""
+
+
 
 sPaths = ["C:/Users/kitty/Desktop"]
 lPath = "Z:/test"
 qPath = "Z:/test"
 customScan(sPaths, None, None)
-customScan(sPaths, lPath, qPath)
-
+customScan(sPaths, lPath, q)
 
