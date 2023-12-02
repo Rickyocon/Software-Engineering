@@ -1,8 +1,9 @@
 import tkinter as tk
 from tkinter import filedialog
 import style
-from Zmeya_Backend.ClamAV.fullscan import customScan
-from Zmeya_Backend.ClamAV.fullscan import fullScan
+import threading
+from Zmeya_Backend.core import customScan
+from Zmeya_Backend.core import fullScan
 
 def display_scanning(main_frame, update_main_frame, clear_main_frame):
     switch_to_scan_page(main_frame, update_main_frame, clear_main_frame)
