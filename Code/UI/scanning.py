@@ -130,8 +130,3 @@ def display_schedule_scan_options(main_frame, update_main_frame, clear_main_fram
     # Schedule Button
     btn_schedule = tk.Button(main_frame, text="Schedule Scan", command=lambda: schedule_scan(calendar.get_date(), entry_frequency.get(), hour_var.get(), minute_var.get(), am_pm_var.get()), **style.BUTTON_STYLES)
     btn_schedule.pack(pady=style.PAD_Y)
-
-    def schedule_scan(date, frequency, hour, minute, am_pm):
-        # Implementation for scheduling logic goes here
-        # Convert 12-hour format to 24-hour format if necessary
-        pass
