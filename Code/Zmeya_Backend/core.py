@@ -44,7 +44,7 @@ def throwAwayTheKey(qPath, hide=False): #Tunnels Encrypted File into its own sel
 			shutil.move(fullpath, dir)
           
 def unlock(pathToV, vname): #decrypts chosen file vname in folder pathToV
-	#Test format of dPath
+	pathToV = path_format(pathToV)
 	pathToV = str(pathToV) + "\\"
 	kPath = str(pathToV) +"Key.txt"
 	dPath = str(pathToV) + vname
@@ -65,6 +65,7 @@ def peek(pathToV, vname): #Peeks at chosen encrypted file in folder pathToV with
 	relock(pathToV, vname)
 
 def relock(pathToV, vname): #Locks chosen decrypted file vname using Key.txt in PathToV (where vname is also)
+	pathToV = path_format(pathToV)
 	kPath = pathToV + "\\"+"Key.txt"
 	ePath = str(pathToV) + "\\" + vname
 
