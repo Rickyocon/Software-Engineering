@@ -191,6 +191,8 @@ def run_schtasks(command):
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
 
+# TIME IN 24HR FORMAT
+
 def schedule_scan_daily(input_hour, input_minute, input_often=1):
     path = os.path.abspath(__file__)
     command = f"SCHTASKS /CREATE /SC DAILY /MO {input_often} /TN \"YourScanTaskNameDaily\" /TR \"python {path} {input_hour} {input_minute}\" /ST {input_hour:02d}:{input_minute:02d} /F"
@@ -208,7 +210,7 @@ def schedule_scan_monthly(day_of_month, input_hour, input_minute, input_often=1)
 
 def schedule_scan_once(year, month, day, input_hour, input_minute):
     path = os.path.abspath(__file__)
-    date = f"{year}-{month:02d}-{day:02d}"
+    date = f"{month:02d}/{day:02d}/{year}" # so date is in MM/DD/YYYY format
     command = f"SCHTASKS /CREATE /SC ONCE /SD {date} /TN \"YourScanTaskNameOnce\" /TR \"python {path} {input_hour} {input_minute}\" /ST {input_hour:02d}:{input_minute:02d} /F"
     run_schtasks(command)
 
@@ -216,6 +218,7 @@ def schedule_scan_once(year, month, day, input_hour, input_minute):
 """
 """
 print(lock("C:\\Users\\ian\\OneDrive\\Desktop\\Zmeya Prototyping\\ClamAV\\Viruses"))
+
 '''sPaths = ["C:/Users/kitty/Desktop"]
 lPath = "Z:/test"
 qPath = "Z:/test"
