@@ -3,6 +3,81 @@ import datetime
 from datetime import datetime as time
 import string
 import os
+import shutil
+from cryptography.fernet import Fernet
+
+def lock(qPath): #First time lock function with qPath
+	filestolock = os.listdir(qPath)
+	key = Fernet.generate_key()
+	keyfile = qPath + "\\" + "Key.txt"
+	fernet = Fernet(key)
+	for fil in filestolock:
+		ePath = qPath + "\\" + fil
+		try:
+			with open(ePath, 'rb') as file:
+				original = file.read()
+			encrypted = fernet.encrypt(original)
+			with open(ePath, 'wb') as encrypted_file:
+				encrypted_file.write(encrypted)
+		except:
+			print("Access Denied")
+	with open(keyfile, 'w+') as f:
+		f.write(str(key))
+	throwAwayTheKey(qPath)
+	return 0
+
+def throwAwayTheKey(qPath, hide=False): #Tunnels Encrypted File into its own self-contained directory
+	dir = str(datetime.date.today())
+	filestolock = os.listdir(qPath)
+	ext = 1
+	while (("Q"+str(ext) + "-" + dir) in filestolock):
+		ext+=1
+	dir = "Q" +str(ext)+"-"+dir
+	if hide:
+		dir = "."+dir
+	dir = qPath + "\\" + dir
+	os.mkdir(dir)
+	filesinq = os.listdir(qPath)
+	for f in filesinq:
+		if f[0] != 'Q' or '-' not in f or not f[1].isnumeric():
+			fullpath = qPath+"\\"+f
+			shutil.move(fullpath, dir)
+          
+def unlock(pathToV, vname): #decrypts chosen file vname in folder pathToV
+	#Test format of dPath
+	pathToV = str(pathToV) + "\\"
+	kPath = str(pathToV) +"Key.txt"
+	dPath = str(pathToV) + vname
+
+	with open(kPath, 'rb') as file:
+		key = file.read()
+	key = key[2:len(key)-1]
+	fernet = Fernet(key)
+	with open(dPath, 'rb') as enc_file:
+		encrypted = enc_file.read()
+	decrypted = fernet.decrypt(encrypted)
+	with open(dPath, 'wb') as dec_file:
+		dec_file.write(decrypted)
+	return str(decrypted)[2:len(str(decrypted))-1]
+
+def peek(pathToV, vname): #Peeks at chosen encrypted file in folder pathToV with name vname
+	print(unlock(pathToV, vname))
+	relock(pathToV, vname)
+
+def relock(pathToV, vname): #Locks chosen decrypted file vname using Key.txt in PathToV (where vname is also)
+	kPath = pathToV + "\\"+"Key.txt"
+	ePath = str(pathToV) + "\\" + vname
+
+	with open(kPath, 'rb') as file:
+		key = file.read()
+	key = key[1:len(key)-1]
+	fernet = Fernet(key)
+
+	with open(ePath, 'rb') as file:
+		original = file.read()
+	encrypted = fernet.encrypt(original)
+	with open(ePath, 'wb') as encrypted_file:
+		encrypted_file.write(encrypted)
 
 def path_format(paths):
     if isinstance(paths, list):
@@ -29,6 +104,12 @@ def new_folder(path):
     return fPath
 
 def customScan(sPaths, lPath=None, qPath=None):
+    basicScan(sPaths, lPath, qPath)
+    print(lock(qPath))
+    
+    
+
+def basicScan(sPaths, lPath=None, qPath=None):
 
     #Usage:
     #sPaths (String list) [First Argument] represents the path to the file that is going to be scanned.
@@ -134,15 +215,13 @@ def schedule_scan_once(year, month, day, input_hour, input_minute):
 
 """
 """
-
-
-
-sPaths = ["C:/Users/kitty/Desktop"]
+print(lock("C:\\Users\\ian\\OneDrive\\Desktop\\Zmeya Prototyping\\ClamAV\\Viruses"))
+'''sPaths = ["C:/Users/kitty/Desktop"]
 lPath = "Z:/test"
 qPath = "Z:/test"
 customScan(sPaths, None, None)
-customScan(sPaths, lPath, q)
+customScan(sPaths, lPath, qPath)
 schedule_scan_daily(15, 30, 2)
 schedule_scan_weekly("MON", 15, 30, 1)
 schedule_scan_monthly(15, 15, 30, 1)
-schedule_scan_once(2023, 12, 25, 15, 30)
+schedule_scan_once(2023, 12, 25, 15, 30)'''
