@@ -103,6 +103,15 @@ def new_folder(path):
     os.chmod(fPath, 0o700)
     return fPath
 
+def virus_count(logFile):
+    with open(logFile, 'r') as file:
+        lines = file.readlines()
+
+    target_line = [line for line in lines if "Infected files:" in line][-1]
+    virus_count = int(target_line.split(":")[-1].strip())
+    
+    return virus_count
+	
 def customScan(sPaths, lPath=None, qPath=None):
     basicScan(sPaths, lPath, qPath)
     print(lock(qPath))
@@ -150,9 +159,10 @@ def basicScan(sPaths, lPath=None, qPath=None):
 
     #Generate log file based on date
     log_file = "L"+str(datetime.date.today())+".txt"
-    
+    og_file = lPath + "\\" + log_file
+	
     try:
-        with open(lPath + "\\" + log_file, "a") as f:
+        with open(log_file, "a") as f:
             process = subprocess.Popen(scan_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             for message in log_message:    
                 f.write(message)
@@ -163,7 +173,9 @@ def basicScan(sPaths, lPath=None, qPath=None):
     except FileNotFoundError:
         print("File not yet created.")
   
-    print("Scanned ", sPaths)
+    virus_num= virus_count(log_file)
+    print("Infected file(s): ", virus_num)
+    return virus_num
 
       
 def fullScan(lPath, qPath):
