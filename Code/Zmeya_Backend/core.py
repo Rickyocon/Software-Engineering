@@ -113,20 +113,6 @@ def virus_count(logFile):
     return virus_count
 	
 def customScan(sPaths, lPath=None, qPath=None):
-    basicScan(sPaths, lPath, qPath)
-    print(lock(qPath))
-    
-    
-
-def basicScan(sPaths, lPath=None, qPath=None):
-
-    #Usage:
-    #sPaths (String list) [First Argument] represents the path to the file that is going to be scanned.
-    #lPath (String) [Second Argument] represents the path to the file where the logs are to be deposited.
-    #ePaths (String list) [Third Argument] represents the path to the directories that is going to be excluded.
-    #qPath (String) [Fourth Argument] represents the path to the file where the virus/infected folder is to be deposited.
-
-    #replace "/" in the sPaths, lPath, ePaths to "\\"
     sPaths = path_format(sPaths)
    
     if lPath:
@@ -141,6 +127,20 @@ def basicScan(sPaths, lPath=None, qPath=None):
         qfolder = "Zmeya_quarantine"
         qPath = customPath(qfolder)
     qPath = new_folder(qPath)
+    basicScan(sPaths, lPath, qPath)
+    print(lock(qPath))
+    
+    
+
+def basicScan(sPaths, lPath=None, qPath=None):
+
+    #Usage:
+    #sPaths (String list) [First Argument] represents the path to the file that is going to be scanned.
+    #lPath (String) [Second Argument] represents the path to the file where the logs are to be deposited.
+    #ePaths (String list) [Third Argument] represents the path to the directories that is going to be excluded.
+    #qPath (String) [Fourth Argument] represents the path to the file where the virus/infected folder is to be deposited.
+
+    #replace "/" in the sPaths, lPath, ePaths to "\\"
 
     print("Zmeya is scanning: ", sPaths)
     print("The log path is: ", lPath)
