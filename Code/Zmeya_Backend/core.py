@@ -169,8 +169,6 @@ def basicScan(sPaths, lPath=None, qPath=None):
   
     virus_num= virus_count(log_file)
 
-    for sPath in sPaths:
-	    print("Scanned ", sPath)
     print("Infected file(s): ", virus_num)
     return virus_num
 
