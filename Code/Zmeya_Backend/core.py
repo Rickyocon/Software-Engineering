@@ -160,7 +160,7 @@ def basicScan(sPaths, lPath=None, qPath=None):
 
     #Generate log file based on date
     log_file = "L"+str(datetime.date.today())+".txt"
-    og_file = lPath + "\\" + log_file
+    log_file = lPath + "\\" + log_file
 	
     try:
         with open(log_file, "a") as f:
