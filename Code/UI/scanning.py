@@ -3,8 +3,10 @@ from tkinter import filedialog
 import threading
 from tkcalendar import DateEntry
 import style
-from Zmeya_Backend.core import basicScan, fullScan, run_schtasks, schedule_scan_daily, schedule_scan_weekly, schedule_scan_monthly, schedule_scan_once
-
+from Zmeya_Backend.core import (
+    customScan,
+    fullScan,
+)
 def display_scanning(main_frame, update_main_frame, clear_main_frame):
     switch_to_scan_page(main_frame, update_main_frame, clear_main_frame)
 
@@ -99,30 +101,72 @@ def display_schedule_scan_options(main_frame, update_main_frame, clear_main_fram
     title_label.pack(pady=style.PAD_Y)
 
     # Calendar for selecting days
-    lbl_calendar = tk.Label(main_frame, text="Select Date:", **style.LABEL_STYLES)
+    lbl_calendar = tk.Label(main_frame, text="Select Date for Scheduled Scan:", **style.LABEL_STYLES)
     lbl_calendar.pack(pady=style.PAD_Y)
     calendar = DateEntry(main_frame, width=12, background='darkblue', foreground='white', borderwidth=2)
     calendar.pack(pady=style.PAD_Y)
 
-    # Dropdown for selecting time (Hour, Minute, AM/PM)
-    lbl_time = tk.Label(main_frame, text="Select Time (HH:MM):", **style.LABEL_STYLES)
+# Time Entry for selecting time (Hour, Minute) in 24-hour format
+    lbl_time = tk.Label(main_frame, text="Select Time (HH:MM) in 24-hour format:", **style.LABEL_STYLES)
     lbl_time.pack(pady=style.PAD_Y)
-    hours = [f"{h:02d}" for h in range(1, 13)]  # 1 to 12 for 12-hour format
-    minutes = [f"{m:02d}" for m in range(60)]
-    am_pm = ["AM", "PM"]
-    hour_var = tk.StringVar(main_frame)
-    minute_var = tk.StringVar(main_frame)
-    am_pm_var = tk.StringVar(main_frame)
-    hour_menu = tk.OptionMenu(main_frame, hour_var, *hours)
-    minute_menu = tk.OptionMenu(main_frame, minute_var, *minutes)
-    am_pm_menu = tk.OptionMenu(main_frame, am_pm_var, *am_pm)
-    hour_menu.pack(pady=style.PAD_Y)
-    minute_menu.pack(pady=style.PAD_Y)
-    am_pm_menu.pack(pady=style.PAD_Y)
+    
+    time_frame = tk.Frame(main_frame, bg=style.BACKGROUND_COLOR)  # Frame to hold time selection widgets
+
+    lbl_time = tk.Label(time_frame, text="Select Time:", **style.LABEL_STYLES)
+    lbl_time.pack(side=tk.LEFT, padx=(0, 10))  # Left side and some padding to the right
+    
+    entry_hour = tk.Entry(time_frame, width=2, **style.ENTRY_STYLES)  # Width set to 2 to hold two digits
+    entry_hour.pack(side=tk.LEFT)
+    
+    lbl_colon = tk.Label(time_frame, text=":", **style.LABEL_STYLES)  # Colon label
+    lbl_colon.pack(side=tk.LEFT)
+    
+    entry_minute = tk.Entry(time_frame, width=2, **style.ENTRY_STYLES)  # Width set to 2 to hold two digits
+    entry_minute.pack(side=tk.LEFT)
+
+    time_frame.pack(pady=style.PAD_Y)  # Pack the entire frame
+
+    # Dropdown for selecting scan frequency (Daily, Weekly, Monthly, Once)
+    lbl_frequency = tk.Label(main_frame, text="Select Frequency:", **style.LABEL_STYLES)
+    lbl_frequency.pack(pady=style.PAD_Y)
+    frequency_var = tk.StringVar(main_frame)
+    frequency_options = ['Daily', 'Weekly', 'Monthly', 'Once']
+    frequency_menu = tk.OptionMenu(main_frame, frequency_var, *frequency_options)
+    frequency_menu.pack(pady=style.PAD_Y)
+
+    # Entry for additional frequency options (Day of week or Month)
+    lbl_additional = tk.Label(main_frame, text="Day of Week/Month (if applicable):", **style.LABEL_STYLES)
+    lbl_additional.pack(pady=style.PAD_Y)
+    entry_additional = tk.Entry(main_frame, **style.ENTRY_STYLES)
+    entry_additional.pack(pady=style.PAD_Y)
+
+    def schedule_scan():
+        date = calendar.get_date()
+        hour = entry_hour.get()
+        minute = entry_minute.get()
+        frequency = frequency_var.get()
+        additional_info = entry_additional.get()
+
+        try:
+            hour = int(hour)
+            minute = int(minute)
+            if frequency == 'Daily':
+                schedule_scan_daily(hour, minute)
+            elif frequency == 'Weekly':
+                schedule_scan_weekly(additional_info, hour, minute)
+            elif frequency == 'Monthly':
+                schedule_scan_monthly(int(additional_info), hour, minute)
+            elif frequency == 'Once':
+                year, month, day = map(int, date.split('-'))
+                schedule_scan_once(year, month, day, hour, minute)
+            update_main_frame(f"Scan scheduled successfully for {frequency} at {hour}:{minute}.")
+        except ValueError as e:
+            update_main_frame(f"Error scheduling scan: {e}")
 
     # Schedule Button
-    btn_schedule = tk.Button(main_frame, text="Schedule Scan", command=lambda: schedule_scan(calendar.get_date(), hour_var.get(), minute_var.get(), am_pm_var.get()), **style.BUTTON_STYLES)
+    btn_schedule = tk.Button(main_frame, text="Schedule Scan", command=schedule_scan, **style.BUTTON_STYLES)
     btn_schedule.pack(pady=style.PAD_Y)
+
 
     def schedule_scan(date, hour, minute, am_pm):
         # Convert 12-hour format to 24-hour format

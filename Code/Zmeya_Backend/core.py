@@ -44,7 +44,7 @@ def throwAwayTheKey(qPath, hide=False): #Tunnels Encrypted File into its own sel
 			shutil.move(fullpath, dir)
           
 def unlock(pathToV, vname): #decrypts chosen file vname in folder pathToV
-	#Test format of dPath
+	pathToV = path_format(pathToV)
 	pathToV = str(pathToV) + "\\"
 	kPath = str(pathToV) +"Key.txt"
 	dPath = str(pathToV) + vname
@@ -65,6 +65,7 @@ def peek(pathToV, vname): #Peeks at chosen encrypted file in folder pathToV with
 	relock(pathToV, vname)
 
 def relock(pathToV, vname): #Locks chosen decrypted file vname using Key.txt in PathToV (where vname is also)
+	pathToV = path_format(pathToV)
 	kPath = pathToV + "\\"+"Key.txt"
 	ePath = str(pathToV) + "\\" + vname
 
@@ -107,26 +108,38 @@ def virus_count(logFile):
     with open(logFile, 'r') as file:
         lines = file.readlines()
 
-    target_line = [line for line in lines if "Infected files:" in line][-1]
+    infected_lines = [line for line in lines if "Infected files:" in line]
+
+    if not infected_lines:
+        return 0  # Return 0 if no lines found with "Infected files:"
+
+    target_line = infected_lines[-1]
     virus_count = int(target_line.split(":")[-1].strip())
     
     return virus_count
 	
+def log_scheduler_activity(message):
+    """
+    Logs the scheduler activities to a file.
+    """
+    with open('scheduler_log.txt', 'a') as log_file:
+        current_time = dt.now().strftime('%Y-%m-%d %H:%M:%S')
+        log_file.write(f"{current_time} - {message}\n")
+
+def run_scheduler():
+    """
+    Runs the scheduler executable.
+    """
+    try:
+        # Adjust the path to your scheduler.exe
+        scheduler_path = os.path.join(os.getcwd(), 'dist', 'scheduler.exe')
+        subprocess.run(scheduler_path, check=True)
+        log_scheduler_activity("Scheduler executed successfully.")
+    except subprocess.CalledProcessError as e:
+        log_scheduler_activity(f"Scheduler execution failed: {e}")
+
+
 def customScan(sPaths, lPath=None, qPath=None):
-    basicScan(sPaths, lPath, qPath)
-    print(lock(qPath))
-    
-    
-
-def basicScan(sPaths, lPath=None, qPath=None):
-
-    #Usage:
-    #sPaths (String list) [First Argument] represents the path to the file that is going to be scanned.
-    #lPath (String) [Second Argument] represents the path to the file where the logs are to be deposited.
-    #ePaths (String list) [Third Argument] represents the path to the directories that is going to be excluded.
-    #qPath (String) [Fourth Argument] represents the path to the file where the virus/infected folder is to be deposited.
-
-    #replace "/" in the sPaths, lPath, ePaths to "\\"
     sPaths = path_format(sPaths)
    
     if lPath:
@@ -141,6 +154,24 @@ def basicScan(sPaths, lPath=None, qPath=None):
         qfolder = "Zmeya_quarantine"
         qPath = customPath(qfolder)
     qPath = new_folder(qPath)
+    basicScan(sPaths, lPath, qPath)
+    print(lock(qPath))
+    log_scheduler_activity("Custom scan started.")
+
+    basicScan(sPaths, lPath, qPath)
+
+    log_scheduler_activity("Custom scan completed.")
+    
+
+def basicScan(sPaths, lPath=None, qPath=None):
+
+    #Usage:
+    #sPaths (String list) [First Argument] represents the path to the file that is going to be scanned.
+    #lPath (String) [Second Argument] represents the path to the file where the logs are to be deposited.
+    #ePaths (String list) [Third Argument] represents the path to the directories that is going to be excluded.
+    #qPath (String) [Fourth Argument] represents the path to the file where the virus/infected folder is to be deposited.
+
+    #replace "/" in the sPaths, lPath, ePaths to "\\"
 
     print("Zmeya is scanning: ", sPaths)
     print("The log path is: ", lPath)
@@ -159,7 +190,7 @@ def basicScan(sPaths, lPath=None, qPath=None):
 
     #Generate log file based on date
     log_file = "L"+str(datetime.date.today())+".txt"
-    og_file = lPath + "\\" + log_file
+    log_file = lPath + "\\" + log_file
 	
     try:
         with open(log_file, "a") as f:
@@ -193,9 +224,31 @@ def fullScan(lPath, qPath):
     3. 'os.path.exists('%s:\\' % d)': This checks if a path with the given drive letter exists.
        If the drive exists, its path (like 'C:\\') is added to the list.
     """
-    
-    customScan(drives, lPath, qPath)
+    if lPath:
+        lPath = path_format(lPath)
+    else:
+        lfolder = "Zmeya_log"
+        lPath = customPath(lfolder)
+
+    if qPath:
+        qPath = path_format(qPath)
+    else:
+        qfolder = "Zmeya_quarantine"
+        qPath = customPath(qfolder)
+    qPath = new_folder(qPath)
+    basicScan(drives, lPath, qPath)
+
 ######
+
+if __name__ == "__main__":
+    log_scheduler_activity("Script started.")
+    run_scheduler()
+    # Example scan paths
+    scan_paths = ['/path/to/scan']
+    customScan(scan_paths)
+    log_scheduler_activity("Script completed.")
+
+"""
 def run_schtasks(command):
     try:
         subprocess.run(command, check=True, shell=True)
@@ -227,7 +280,7 @@ def schedule_scan_once(year, month, day, input_hour, input_minute):
     run_schtasks(command)
 
 
-"""
+
 """
 #print(lock("C:\\Users\\ian\\OneDrive\\Desktop\\Zmeya Prototyping\\ClamAV\\Viruses"))
 
