@@ -206,7 +206,9 @@ def fullScan(lPath, qPath):
         qfolder = "Zmeya_quarantine"
         qPath = customPath(qfolder)
     qPath = new_folder(qPath)
-    basicScan(drives, lPath, qPath)
+    virus_num = basicScan(drives, lPath, qPath)
+    print(lock(qPath))
+    return virus_num)
 ######
 def run_schtasks(command):
     try:
