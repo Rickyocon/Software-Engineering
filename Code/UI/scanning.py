@@ -3,7 +3,7 @@ from tkinter import filedialog
 import threading
 from tkcalendar import DateEntry
 import style
-from Zmeya_Backend.core import basicScan, fullScan, run_schtasks, schedule_scan_daily, schedule_scan_weekly, schedule_scan_monthly, schedule_scan_once
+from Zmeya_Backend.core import customScan,basicScan, fullScan, run_schtasks, schedule_scan_daily, schedule_scan_weekly, schedule_scan_monthly, schedule_scan_once
 
 def display_scanning(main_frame, update_main_frame, clear_main_frame):
     switch_to_scan_page(main_frame, update_main_frame, clear_main_frame)
@@ -85,7 +85,7 @@ def display_custom_scan_options(main_frame, update_main_frame, clear_main_frame)
         scan_thread.start()
 
     def run_scan(scan_target, log_path, status_label):
-        for output in basicScan([scan_target], log_path, None):
+        for output in customScan([scan_target], log_path, None):
             status_label.config(text=output)
             main_frame.update_idletasks()
 
