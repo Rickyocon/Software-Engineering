@@ -166,9 +166,11 @@ def basicScan(sPaths, lPath=None, qPath=None):
             f.close()
     except FileNotFoundError:
         print("File not yet created.")
-  
-    virus_num= virus_count(log_file)
 
+    for sPath in sPaths:
+        print(sPath)	
+	    
+    virus_num= virus_count(log_file)
     print("Infected file(s): ", virus_num)
     return virus_num
 
