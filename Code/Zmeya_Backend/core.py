@@ -97,7 +97,6 @@ def customPath(dirName):
 def new_folder(path):
     now = time.now()
     fName = f"Q{now.strftime('%Y%m%d_%H%M%S')}"
-    print(fName)
     fPath = os.path.join(path, fName)
     if not os.path.exists(fPath):
         os.makedirs(fPath, exist_ok=True)
