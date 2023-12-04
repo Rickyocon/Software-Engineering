@@ -202,7 +202,7 @@ def fullScan(lPath, qPath):
     qPath = new_folder(qPath)
     virus_num = basicScan(drives, lPath, qPath)
     print(lock(qPath))
-    return (virus_num)
+    return virus_num
 ######
 def run_schtasks(command):
     try:
