@@ -194,8 +194,19 @@ def fullScan(lPath, qPath):
     3. 'os.path.exists('%s:\\' % d)': This checks if a path with the given drive letter exists.
        If the drive exists, its path (like 'C:\\') is added to the list.
     """
-    
-    customScan(drives, lPath, qPath)
+    if lPath:
+        lPath = path_format(lPath)
+    else:
+        lfolder = "Zmeya_log"
+        lPath = customPath(lfolder)
+
+    if qPath:
+        qPath = path_format(qPath)
+    else:
+        qfolder = "Zmeya_quarantine"
+        qPath = customPath(qfolder)
+    qPath = new_folder(qPath)
+    basicScan(drives, lPath, qPath)
 ######
 def run_schtasks(command):
     try:
