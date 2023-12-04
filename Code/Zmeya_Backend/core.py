@@ -97,7 +97,6 @@ def customPath(dirName):
 def new_folder(path):
     now = time.now()
     fName = f"Q{now.strftime('%Y%m%d_%H%M%S')}"
-    print(fName)
     fPath = os.path.join(path, fName)
     if not os.path.exists(fPath):
         os.makedirs(fPath, exist_ok=True)
@@ -166,11 +165,11 @@ def basicScan(sPaths, lPath=None, qPath=None):
             f.close()
     except FileNotFoundError:
         print("File not yet created.")
-  
-    virus_num= virus_count(log_file)
 
     for sPath in sPaths:
-	    print("Scanned ", sPath)
+	print("Scanned ", sPath)	
+	    
+    virus_num= virus_count(log_file)
     print("Infected file(s): ", virus_num)
     return virus_num
 
@@ -204,7 +203,7 @@ def fullScan(lPath, qPath):
     qPath = new_folder(qPath)
     virus_num = basicScan(drives, lPath, qPath)
     print(lock(qPath))
-    return (virus_num)
+    return virus_num
 ######
 def run_schtasks(command):
     try:
