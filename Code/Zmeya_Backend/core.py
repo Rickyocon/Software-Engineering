@@ -138,19 +138,12 @@ def basicScan(sPaths, lPath=None, qPath=None):
     #Usage:
     #sPaths (String list) [First Argument] represents the path to the file that is going to be scanned.
     #lPath (String) [Second Argument] represents the path to the file where the logs are to be deposited.
-    #ePaths (String list) [Third Argument] represents the path to the directories that is going to be excluded.
     #qPath (String) [Fourth Argument] represents the path to the file where the virus/infected folder is to be deposited.
-
-    #replace "/" in the sPaths, lPath, ePaths to "\\"
-
-    print("Zmeya is scanning: ", sPaths)
-    print("The log path is: ", lPath)
-    print("The quaranting path is: ", qPath)
 
     #Commond for ClamAV
     scan_command = ["clamscan.exe", "-r", "--max-dir-recursion=10",f"--move={qPath}", "-i"]
     scan_command.extend(sPaths)
-    print(" ".join(scan_command))
+    #print(" ".join(scan_command))
     
     #Message of scanning directories
     log_message = []
@@ -175,6 +168,9 @@ def basicScan(sPaths, lPath=None, qPath=None):
         print("File not yet created.")
   
     virus_num= virus_count(log_file)
+
+    for sPath in sPaths:
+	    print("Scanned ", sPath)
     print("Infected file(s): ", virus_num)
     return virus_num
 
