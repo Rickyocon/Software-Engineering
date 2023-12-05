@@ -12,7 +12,7 @@ def main():
     
     #full scan : core.customScan(drives, log_path, quarantine_path)
     # Perform the custom scan
-    core.customScan([scan_path], log_path, quarantine_path) # for custompath(dirName)
+    core.customScan([scan_path], lPath, qPath) # for custompath(dirName)
 
 if __name__ == "__main__":
     main()
