@@ -1,11 +1,17 @@
 import tkinter as tk
 import style
+import os
+def customPath(dirName):
+    path = os.path.join(os.getcwd(), dirName)
+    if not os.path.exists(path):
+        os.makedirs(path, exist_ok=True)
+    os.chmod(path, 511)
+    return path
 
 def display_home_content(main_frame):
     for widget in main_frame.winfo_children():
         widget.destroy()
-    
-    logo = tk.PhotoImage(file='assets/Zmeya.png')
+    logo = tk.PhotoImage(file=customPath("UI\\assets\\Zmeya.png"))
     logo_label = tk.Label(main_frame, image=logo, bg=style.BACKGROUND_COLOR)
     welcome_label = tk.Label(main_frame, text="Welcome to Zmeya", **style.LABEL_STYLES)
 
