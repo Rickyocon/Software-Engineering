@@ -1,9 +1,11 @@
 import subprocess #This module allows you to spawn new processes, connect to their input/output/error pipes, and obtain their return codes.
 import datetime
 from datetime import datetime as time
+from datetime import datetime as dt
 import string
 import os
 import shutil
+import sys
 from cryptography.fernet import Fernet
 
 def lock(qPath): #First time lock function with qPath
@@ -205,39 +207,56 @@ def fullScan(lPath, qPath):
     print(lock(qPath))
     return virus_num
 ######
+#scheduling
+
 def run_schtasks(command):
+    subprocess.run(command, shell=True)
+
+def schedule_scan_once(input_year, input_month, input_day, input_hour, input_minute):
+    path = os.path.join(os.getcwd(), "scheduler.exe")
+    date = f"{input_month:02d}/{input_day:02d}/{input_year}"
+    command = f'SCHTASKS /CREATE /SC ONCE /SD {date} /TN "Once" /TR "python {path} {input_hour} {input_minute}" /ST {input_hour:02d}:{input_minute:02d} /F'
+    run_schtasks(command)
+
+def schedule_scan_daily(input_hour, input_minute):
+    path = os.path.join(os.getcwd(), "scheduler.exe")
+    command = f'SCHTASKS /CREATE /SC DAILY /TN "Daily" /TR "python {path} {input_hour} {input_minute}" /ST {input_hour:02d}:{input_minute:02d} /F'
+    run_schtasks(command)
+
+def schedule_scan_weekly(input_day_of_week, input_hour, input_minute):
+    path = os.path.join(os.getcwd(), "scheduler.exe")
+    command = f'SCHTASKS /CREATE /SC WEEKLY /D {input_day_of_week} /TN "Weekly" /TR "python {path} {input_hour} {input_minute}" /ST {input_hour:02d}:{input_minute:02d} /F'
+    run_schtasks(command)
+
+def schedule_scan_monthly(input_day_of_month, input_hour, input_minute):
+    path = os.path.join(os.getcwd(), "scheduler.exe")
+    command = f'SCHTASKS /CREATE /SC MONTHLY /M {input_day_of_month} /TN "Monthly" /TR "python {path} {input_hour} {input_minute}" /ST {input_hour:02d}:{input_minute:02d} /F'
+    run_schtasks(command)
+
+
+#checking:
+"""
+sPaths = ["C:/Users/name/Desktop/checking"]
+lPath = 'C:/Users/name/Desktop/l'
+qPath = "C:/Users/name/Desktop/q"
+
+schedule_scan_once(2023, 12, 4, 13, 29)
+
+### this one gives output showing if task was scheduled in windows task scheduler
+
+def check_task_status(task_name):
+    command = f'schtasks /Query /TN {task_name} /FO LIST'
     try:
-        subprocess.run(command, check=True, shell=True)
-        print("Scheduled task created successfully.")
-    except subprocess.CalledProcessError as e:
-        print(f"An error occurred: {e}")
+        output = subprocess.check_output(command, shell=True).decode()
+        print(output)
+    except subprocess.CalledProcessError:
+        print(f'Task "{task_name}" does not exist.')
 
-# TIME IN 24HR FORMAT
-
-def schedule_scan_daily(input_hour, input_minute, input_often=1):
-    path = os.path.abspath(__file__)
-    command = f"SCHTASKS /CREATE /SC DAILY /MO {input_often} /TN \"YourScanTaskNameDaily\" /TR \"python {path} {input_hour} {input_minute}\" /ST {input_hour:02d}:{input_minute:02d} /F"
-    run_schtasks(command)
-
-def schedule_scan_weekly(weekday, input_hour, input_minute, input_often=1):
-    path = os.path.abspath(__file__)
-    command = f"SCHTASKS /CREATE /SC WEEKLY /D {weekday} /MO {input_often} /TN \"YourScanTaskNameWeekly\" /TR \"python {path} {input_hour} {input_minute}\" /ST {input_hour:02d}:{input_minute:02d} /F"
-    run_schtasks(command)
-
-def schedule_scan_monthly(day_of_month, input_hour, input_minute, input_often=1):
-    path = os.path.abspath(__file__)
-    command = f"SCHTASKS /CREATE /SC MONTHLY /D {day_of_month} /MO {input_often} /TN \"YourScanTaskNameMonthly\" /TR \"python {path} {input_hour} {input_minute}\" /ST {input_hour:02d}:{input_minute:02d} /F"
-    run_schtasks(command)
-
-def schedule_scan_once(year, month, day, input_hour, input_minute):
-    path = os.path.abspath(__file__)
-    date = f"{month:02d}/{day:02d}/{year}" # so date is in MM/DD/YYYY format
-    command = f"SCHTASKS /CREATE /SC ONCE /SD {date} /TN \"YourScanTaskNameOnce\" /TR \"python {path} {input_hour} {input_minute}\" /ST {input_hour:02d}:{input_minute:02d} /F"
-    run_schtasks(command)
-
-
+check_task_status("Once")
 """
-"""
+
+
+
 #print(lock("C:\\Users\\ian\\OneDrive\\Desktop\\Zmeya Prototyping\\ClamAV\\Viruses"))
 
 '''sPaths = ["C:/Users/kitty/Desktop"]
