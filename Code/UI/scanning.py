@@ -3,8 +3,10 @@ from tkinter import filedialog
 from tkinter import filedialog, Frame
 import threading
 from tkcalendar import DateEntry
-import core
 import style
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Zmeya_Backend'))
 from Zmeya_Backend import core
 from core import customScan, basicScan, fullScan, run_schtasks, schedule_scan_daily, schedule_scan_weekly, schedule_scan_monthly, schedule_scan_once
 

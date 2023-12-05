@@ -2,13 +2,14 @@ import tkinter as tk
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Zmeya_Backend'))
 import scanning
 import settings
 import quarantine
 import home
 import style
 from Zmeya_Backend import core
-import Zmeya_Backend.core
+from core import customScan
 
 def update_main_frame(content):
     for widget in main_frame.winfo_children():
