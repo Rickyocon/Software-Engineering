@@ -113,6 +113,27 @@ def virus_count(logFile):
               virus_count=0
     return virus_count
 	
+def schedule_scan_once(year, month, day, input_hour, input_minute, scan_path):
+      path = os.path.abspath(__file__)
+      date = f"{month:02d}/{day:02d}/{year}" # so date is in MM/DD/YYYY format
+      command = f"SCHTASKS /CREATE /SC ONCE /SD {date} /TN \"YourScanTaskNameOnce\" /TR \"python {path} scan{scan_path} {input_hour} {input_minute}\" /ST {input_hour:02d}:{input_minute:02d} /F"
+      run_schtasks(command)
+
+def schedule_scan_daily(input_hour, input_minute, scan_path, input_often=1):
+      path = os.path.abspath(__file__)
+      command = f"SCHTASKS /CREATE /SC DAILY /MO {input_often} /TN \"YourScanTaskNameDaily\" /TR \"python {path} scan{scan_path} {input_hour} {input_minute}\" /ST {input_hour:02d}:{input_minute:02d} /F"
+      run_schtasks(command)
+
+def schedule_scan_weekly(weekday, input_hour, input_minute, scan_path, input_often=1):
+        path = os.path.abspath(__file__)
+        command = f"SCHTASKS /CREATE /SC WEEKLY /D {weekday} /MO {input_often} /TN \"YourScanTaskNameWeekly\" /TR \"python {path} scan{scan_path} {input_hour} {input_minute}\" /ST {input_hour:02d}:{input_minute:02d} /F"
+        run_schtasks(command)
+
+def schedule_scan_monthly(day_of_month, input_hour, input_minute, scan_path, input_often=1):
+        path = os.path.abspath(__file__)
+        command = f"SCHTASKS /CREATE /SC MONTHLY /D {day_of_month} /MO {input_often} /TN \"YourScanTaskNameMonthly\" /TR \"python {path} scan{scan_path} {input_hour} {input_minute}\" /ST {input_hour:02d}:{input_minute:02d} /F"
+        run_schtasks(command)
+
 def customScan(sPaths, lPath=None, qPath=None):
     sPaths = path_format(sPaths)
    
@@ -212,7 +233,7 @@ def run_schtasks(command):
         print("Scheduled task created successfully.")
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
-
+'''
 # TIME IN 24HR FORMAT
 
 def schedule_scan_daily(input_hour, input_minute, input_often=1):
@@ -236,12 +257,10 @@ def schedule_scan_once(year, month, day, input_hour, input_minute):
     command = f"SCHTASKS /CREATE /SC ONCE /SD {date} /TN \"YourScanTaskNameOnce\" /TR \"python {path} {input_hour} {input_minute}\" /ST {input_hour:02d}:{input_minute:02d} /F"
     run_schtasks(command)
 
-
-"""
 """
 #print(lock("C:\\Users\\ian\\OneDrive\\Desktop\\Zmeya Prototyping\\ClamAV\\Viruses"))
 
-'''sPaths = ["C:/Users/kitty/Desktop"]
+sPaths = ["C:/Users/kitty/Desktop"]
 lPath = "Z:/test"
 qPath = "Z:/test"
 customScan(sPaths, None, None)
@@ -249,4 +268,5 @@ customScan(sPaths, lPath, qPath)
 schedule_scan_daily(15, 30, 2)
 schedule_scan_weekly("MON", 15, 30, 1)
 schedule_scan_monthly(15, 15, 30, 1)
-schedule_scan_once(2023, 12, 25, 15, 30)'''
+schedule_scan_once(2023, 12, 25, 15, 30)
+'''

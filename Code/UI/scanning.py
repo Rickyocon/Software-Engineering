@@ -3,8 +3,10 @@ from tkinter import filedialog
 from tkinter import filedialog, Frame
 import threading
 from tkcalendar import DateEntry
+import core
 import style
-from Zmeya_Backend.core import customScan,basicScan, fullScan, run_schtasks, schedule_scan_daily, schedule_scan_weekly, schedule_scan_monthly, schedule_scan_once
+from Zmeya_Backend import core
+from core import customScan, basicScan, fullScan, run_schtasks, schedule_scan_daily, schedule_scan_weekly, schedule_scan_monthly, schedule_scan_once
 
 def display_scanning(main_frame, update_main_frame, clear_main_frame):
     switch_to_scan_page(main_frame, update_main_frame, clear_main_frame)
@@ -135,17 +137,21 @@ def display_custom_scan_options(main_frame, update_main_frame, clear_main_frame)
     btn_start_scan = tk.Button(main_frame, text="Start Scan", command=lambda: start_scan(entry_scan_target.get(), entry_log_path.get(), entry_quarantine_path.get()), **style.BUTTON_STYLES)
     btn_start_scan.pack(pady=style.PAD_Y)
 
-import tkinter as tk
-from tkinter import filedialog, OptionMenu, StringVar, Frame
-from tkcalendar import DateEntry
-import style
-# Import necessary functions from backend
-
 def display_schedule_scan_options(main_frame, update_main_frame, clear_main_frame):
     clear_main_frame()
 
     title_label = tk.Label(main_frame, text="Schedule Scan", **style.LABEL_STYLES)
     title_label.pack(pady=style.PAD_Y)
+
+    # Schedule Type Selection Frame
+    lbl_schedule_type = tk.Label(main_frame, text="Select Schedule Type:", **style.LABEL_STYLES)
+    lbl_schedule_type.pack(pady=style.PAD_Y)
+    schedule_type_var = tk.StringVar(main_frame)
+    schedule_type_var.set('once')
+    schedule_types = ["daily", "weekly", "monthly", "once"]
+  #  schedule_type_var = tk.StringVar(main_frame)
+    schedule_type_menu = tk.OptionMenu(main_frame, schedule_type_var, *schedule_types)  
+    schedule_type_menu.pack(pady=style.PAD_Y)   
 
     # Drive/Folder Selection Frame
     frame_scan_target = Frame(main_frame)
@@ -184,21 +190,62 @@ def display_schedule_scan_options(main_frame, update_main_frame, clear_main_fram
     minute_menu.pack(pady=style.PAD_Y)
     am_pm_menu.pack(pady=style.PAD_Y)
 
+    # Additional Parameters Frame
+    lbl_extra_param = tk.Label(main_frame, text="Day (optional)", **style.LABEL_STYLES)
+    lbl_extra_param.pack(pady=style.PAD_Y)
+    extra_param_var = tk.StringVar
+    extra_param_var.menu = tk.OptionMenu(main_frame, extra_param_var, *[])
+    extra_param_var.menu.pack(pady=style.PAD_Y)
     # Schedule Button
     btn_schedule = tk.Button(main_frame, text="Schedule Scan", command=lambda: schedule_scan(calendar.get_date(), hour_var.get(), minute_var.get(), am_pm_var.get(), entry_scan_target.get()), **style.BUTTON_STYLES)
     btn_schedule.pack(pady=style.PAD_Y)
 
-    def schedule_scan(date, hour, minute, am_pm, scan_path):
-        # Logic to schedule scan
-        hour_24 = int(hour) + 12 if am_pm == 'PM' and hour != '12' else int(hour)
-        hour_24 = hour_24 if am_pm == 'AM' or hour == '12' else 0
+    extra_param_var = tk.StringVar(main_frame)
+    extra_param_menu = tk.OptionMenu(main_frame, extra_param_var, ())
+    extra_param_menu.pack(pady=style.PAD_Y)
 
-        if not scan_path:
-            update_main_frame("Error: Please select a drive or folder to scan.")
-            return
+    def update_extra_param_options(*args):
+        schedule_type = schedule_type_var.get()
+        if schedule_type == 'weekly':
+            days_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+            extra_param_menu['menu'].delete(0, "end")
+            for day in days_of_week:
+                extra_param_menu['menu'].add_command(label=day, command=tk._setit(extra_param_var, day))
+            lbl_extra_param.config(text="Day of week:")
+        elif schedule_type == 'monthly': 
+        
+            days_of_month = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+            extra_param_menu['menu'].delete(0, "end")
+            for day in days_of_month:
+                extra_param_menu['menu'].add_command(label=day, command=tk._setit(extra_param_var, day))
+            lbl_extra_param.config(text="Day of month:")
+        else:
+            extra_param_menu['menu'].delete(0, "end")
+            lbl_extra_param.config(text="Day (optional):")                      
+                      
+    schedule_type_var.trace('w', update_extra_param_options)
 
-        # Call backend function to schedule scan (needs to be implemented)
-        # Example: schedule_scan_daily(hour_24, int(minute), scan_path)
-        update_main_frame(f"Scan scheduled at {hour}:{minute} {am_pm} on {date} for {scan_path}")
+    def schedule_scan(schedule_type, date, hour, minute, scan_path, extra_param=None):
+        try:
+            year, month, day = [int(x) for x in date.split('-')]
+            hour_24=int(hour)
 
+            if schedule_type == "daily":
+                core.schedule_scan_daily(hour_24, int(minute), scan_path)
+            elif schedule_type == "weekly":
+                core.schedule_scan_weekly(extra_param, hour_24, int(minute), scan_path)
+            elif schedule_type == "monthly":
+                core.schedule_scan_monthly(extra_param, hour_24, int(minute), scan_path)
+            elif schedule_type == "once":
+                core.schedule_scan_once(year, month, day, int(hour), int(minute), scan_path)
+            else:
+                raise ValueError
+        
+            update_main_frame('Scan scheduled at {hour}:{minute} {am_pm} on {date} for scan_path')
+        except Exception as e:
+            update_main_frame("Error scheduling scan: {str(e)}")
+        
+
+    
     # ... Additional code if needed ...
+("Scan scheduled  ")

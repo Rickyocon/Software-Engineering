@@ -7,6 +7,8 @@ import settings
 import quarantine
 import home
 import style
+from Zmeya_Backend import core
+import Zmeya_Backend.core
 
 def update_main_frame(content):
     for widget in main_frame.winfo_children():
@@ -14,10 +16,16 @@ def update_main_frame(content):
     content_label = tk.Label(main_frame, text=content, **style.LABEL_STYLES)
     content_label.pack(pady=20)
 
+
 def clear_main_frame():
     for widget in main_frame.winfo_children():
         widget.destroy()
 
+def run_scan_from_comman_line():
+    args = sys.argv[1:]
+    if args and args[0] == 'scan':
+        scan_path = args[1]
+        core.customScan([scan_path])
 # Initialize main window
 root = tk.Tk()
 root.title("Zmeya Anti-Malware")
@@ -41,5 +49,9 @@ main_frame.pack(side='right', expand=True, fill='both')
 
 home.display_home_content(main_frame)
 
-root.mainloop()
+if len(sys.argv) > 1:
+    # Run scan from command line
+    run_scan_from_comman_line()
+else:
+    root.mainloop()
 
