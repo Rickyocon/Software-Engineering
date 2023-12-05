@@ -106,10 +106,11 @@ def new_folder(path):
 def virus_count(logFile):
     with open(logFile, 'r') as file:
         lines = file.readlines()
-
-    target_line = [line for line in lines if "Infected files:" in line][-1]
-    virus_count = int(target_line.split(":")[-1].strip())
-    
+        try:
+              target_line = [line for line in lines if "Infected files:" in line][-1]
+              virus_count = int(target_line.split(":")[-1].strip())
+        except:
+              virus_count=0
     return virus_count
 	
 def customScan(sPaths, lPath=None, qPath=None):
